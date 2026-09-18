@@ -17,6 +17,9 @@ LuCI **Firewall Live View** — client-side JS view polling `ubus fwlive poll` (
 | `htdocs/luci-static/resources/fwlive/logging.js` | Logging toolbar and empty-state DOM renderers |
 | `htdocs/luci-static/resources/fwlive/table.js` | Table thead/rows DOM renderer (`renderThead`, `renderRows`) |
 | `htdocs/luci-static/resources/fwlive/buffer.js` | Ring-buffer apply/merge helpers (pause ingest + resume merge) |
+| `htdocs/luci-static/resources/fwlive/poll-coordinator.js` | Request coalescing, visibility, cadence, and disposal |
+| `htdocs/luci-static/resources/fwlive/render-policy.js` | Pure weak-device display-cap and render-cost decisions |
+| `htdocs/luci-static/resources/fwlive/render-scheduler.js` | Epoch-safe frame coalescing and render token-bucket state |
 | `htdocs/luci-static/resources/fwlive/hostname.js` | Hostname cache LRU + failure TTL helpers |
 | `htdocs/luci-static/resources/fwlive/proto.js` | Protocol name/number helpers |
 | `root/usr/share/luci/menu.d/*.json` | Menu entry (`admin/status/fwlive`) |
@@ -37,3 +40,4 @@ No `luasrc/` — modern JS-only app.
 - No hard `firewall4` dependency
 - Menu depends on ACL only (no `fs` AND of `nft`+`iptables` — that hid the entry on stock fw3 and fw4)
 - Runtime backend detection selects **fw4/nft** (22.03+) or **iptables LOG** (21.02 fw3); best-effort iptables when nft absent
+

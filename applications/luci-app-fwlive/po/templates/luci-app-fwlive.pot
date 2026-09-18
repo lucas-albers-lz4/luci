@@ -1,652 +1,858 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:926
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1378
 msgid "%d matching · %d/%d stored"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:929
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1201
+msgid "%s · requested up to %d raw lines · %d firewall messages returned"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1191
+msgid ""
+"%s · requested up to %d raw lines · server limited fetch to %d · %d firewall "
+"messages returned"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1380
 msgid "0 matching · %d/%d stored"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:251
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:403
 msgid "Accessible (teal/orange)"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:32
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/log.js:328
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:35
 msgid "Action"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:618
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:754
 msgid "Administrator access is required to disable logging."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:586
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:723
 msgid "Administrator access is required to enable logging."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1092
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:148
+msgid "Allow/deny rules, LAN logging, or anything else."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1564
 msgid "Also seen"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:571
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:607
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:707
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:744
 msgid "Another change is staged for the firewall; apply or revert it first."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1658
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2261
 msgid "Any action"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1085
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1557
 msgid "Any protocol"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:113
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1182
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1233
+msgid "Auto"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:138
 msgid "Before you enable logging"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:569
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:703
 msgid "Cannot enable logging until kernel log modules are installed."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:116
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:141
 msgid "Changes:"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:250
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:402
 msgid "Classic (green/red)"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1642
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2234
 msgid "Classic uses green/red; Accessible uses teal/orange"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:116
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:148
 msgid "Clear all"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1698
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2333
 msgid ""
 "Click a cell to filter · ≠ on a chip to exclude · Ctrl+click a rule for "
 "firewall settings · in Simple view, click a row for the full message"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1719
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2403
 msgid ""
 "Click a row (Time or other non-link cells) to see the full log line (Simple "
 "view)."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:113
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:139
 msgid "Click a row for the full message"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1720
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2408
 msgid ""
 "Click an IP, action, or protocol to filter; use the Protocol menu (or ≠ on a "
 "chip) to exclude."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1086
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1558
 msgid "Common"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:944
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1394
 msgid "Connection lost — retrying…"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:609
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:746
 msgid "Could not disable logging."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:573
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:709
 msgid "Could not enable logging."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1680
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2288
 msgid "Custom protocol (prefix ! to exclude). Overrides the menu when set."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:42
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:45
 msgid "DPort"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:40
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1039
+msgid "Degraded — sampling"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1213
+msgid "Degraded — sampling (slow poll RTT; cadence reduced)."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/log.js:332
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:43
 msgid "Destination"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1691
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2318
 msgid "Destination IP contains (! to exclude)"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1692
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/log.js:334
+msgid "Destination port"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2323
 msgid "Destination port (! to exclude)"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1583
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2094
 msgid "Detail"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:37
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:40
 msgid "Dir"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:85
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:94
 msgid "Disabling…"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1616
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1035
+msgid "Display limited to %d rows on this device"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2168
 msgid "Display options"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1716
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2367
 msgid "Display options on the bar set Limit, row tint, palette, and hostnames."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:121
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:146
 msgid "Does not change:"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:138
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:163
 msgid "Don’t show this again"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:150
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:230
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:178
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:304
 msgid "Enable WAN drop/reject logging"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:104
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:124
 msgid "Enable WAN zone drop/reject logging (same as Network → Firewall)."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:107
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:130
 msgid "Enable logging"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1715
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2362
 msgid ""
 "Enable logging turns on WAN zone drop/reject logging only (same as Network → "
 "Firewall). It does not add rules or log normal LAN browsing."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:107
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:150
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:230
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:130
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:178
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:304
 msgid "Enabling…"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1099
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1571
 msgid "Exclude"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:80
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:84
 msgid "Exclude instead"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:53
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:71
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2182
+msgid "Fetch budget"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2372
+msgid ""
+"Fetch budget controls raw log lines per poll. Auto derives from Limit; "
+"Manual selects a bounded maximum."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:59
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:80
 msgid "Filter by %s"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:136
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:154
 msgid "Filter by interface"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:112
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:127
 msgid "Filter logs by rule (hint: %s). Ctrl+click to open firewall settings."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1540
-#: applications/luci-app-fwlive/root/usr/share/luci/menu.d/luci-app-fwlive.json:3
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2021 标准输入:3
 msgid "Firewall Live View"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:43
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:46
 msgid "Flags"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:45
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:48
 msgid "Flow"
 msgstr ""
 
-#: applications/luci-app-fwlive/root/usr/share/rpcd/acl.d/luci-app-fwlive.json:3
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2382
+msgid ""
+"For a responsive table on a weak device, keep Limit at 250 rows or below. "
+"The weak-device cap affects rendered rows; the buffer can still retain more."
+msgstr ""
+
+#: applications/luci-app-fwlive/标准输入:3
 msgid "Grant access to firewall live log view"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1712
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2353
 msgid "Help"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:895
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1306
+msgid "Hide rows"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1346
 msgid ""
 "High event rate — table refresh is throttled to protect the browser. The "
 "buffer still updates; refresh will resume automatically."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1090
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1220
+msgid "Hostname resolve paused while the router is under load."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1562
 msgid "ICMPv6"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:35
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:38
 msgid "IN"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1723
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2421
 msgid ""
 "If Row tint looks missing, the active LuCI theme may omit success/error or "
 "info/warn CSS variables; fwlive falls back to local colors (air-gapped, no "
 "data leaves the device)."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:205
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:258
 msgid ""
-"If the WAN is quiet, wait for probes or use the optional ping check in "
-"Help / the enabling-logs guide."
+"If the WAN is quiet, wait for probes or use the optional ping check in Help "
+"/ the enabling-logs guide."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:80
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:84
 msgid "Include instead"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:34
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/log.js:329
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:37
 msgid "Interface"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1688
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2303
 msgid "Interface (prefix ! to exclude)"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:165
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:232
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:196
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:307
 msgid "I’ll configure this under Network → Firewall"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:194
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:230
 msgid "Kernel log modules missing"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:195
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:234
 msgid ""
-"Kernel netfilter log modules are missing. Install kmod-nf-log-ipv4 and kmod-"
-"nf-log-ipv6 (or kmod-nf-log / kmod-nf-log6), then reload the firewall."
+"Kernel netfilter log modules are missing. Install kmod-nf-log-ipv4 and "
+"kmod-nf-log-ipv6 (or kmod-nf-log / kmod-nf-log6), then reload the firewall."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:44
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:47
 msgid "Len"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1619
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2171
 msgid "Limit"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:536
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:661
 msgid "Limited diagnostics — timeout command missing"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:210
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:266
 msgid "Logging is off on this router"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:252
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:256
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1182
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1234
+msgid "Manual"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2204
+msgid "Manual still uses server protection and poll cadence"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2377
+msgid ""
+"Manual still uses server protection and poll cadence; it changes the fetch "
+"budget, not the polling interval."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:327
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:337
 msgid "Manual test (System → Terminal):"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:46
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:221
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1590
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1595
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2197
+msgid "Maximum raw lines"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:49
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:328
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2106
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2113
 msgid "Message"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1686
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2298
 msgid "More filters"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:37
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/links.js:41
 msgid "Network → Firewall"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:187
-msgid ""
-"No WAN firewall zone found in /etc/config/firewall. Configure zones under"
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:221
+msgid "No WAN firewall zone found in /etc/config/firewall. Configure zones under:"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:185
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:218
 msgid "No WAN zone found"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:163
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:193
 msgid "Not now"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:220
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:289
 msgid "Nothing changes until you click Enable."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:36
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:39
 msgid "OUT"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1610
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2136
 msgid "One line"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:206
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:262
 msgid "Open firewall zone settings"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:211
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:270
 msgid ""
 "OpenWrt does not write firewall events to the log until you turn logging on. "
-"Live View only shows what the firewall already logs — it does not add allow/"
-"deny rules."
+"Live View only shows what the firewall already logs — it does not add "
+"allow/deny rules."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1638
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2227
 msgid "Palette"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:995
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1560
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1442
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2060
 msgid "Pause"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:993
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1441
 msgid "Paused"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:38
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:41
 msgid "Proto"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1674
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/log.js:330
+msgid "Protocol"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2279
 msgid "Protocol — common values"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1656
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2258
 msgid "Quick search"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:91
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:107
 msgid "Remove filter"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:995
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1442
 msgid "Resume"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1631
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2217
 msgid "Row tint"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1721
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2413
 msgid ""
-"Row tint shows pass/deny row backgrounds when checked. Choose Classic (green/"
-"red, default) or Accessible (teal/orange). Action text stays colored either "
-"way."
+"Row tint shows pass/deny row backgrounds when checked. Choose Classic "
+"(green/red, default) or Accessible (teal/orange). Action text stays colored "
+"either way."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1550
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2044
 msgid ""
 "Row tint used a local color fallback because the active LuCI theme did not "
 "apply pass/deny backgrounds."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:33
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:36
 msgid "Rule"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:527
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:652
 msgid "Rule labels incomplete — map truncated"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:531
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:655
 msgid "Rule labels unavailable"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:529
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:654
 msgid "Rule labels unavailable — temp file failed"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:41
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:44
 msgid "SPort"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1650
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/log.js:327
+msgid "Search"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1211
+msgid "Server adaptive protection is disabled."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1209
+msgid "Server protection state is unknown."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1216
+msgid "Server shedding — at most %d log lines per poll."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1218
+msgid "Server truncated this poll (adaptive cap)."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2246
 msgid "Show hostnames"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1629
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2215
 msgid "Show pass/deny row background colors"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1576
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1306
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2159
+msgid "Show rows"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1268
+msgid "Showing a compact summary of the top of the shown sample."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2083
 msgid "Simple"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:39
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/log.js:331
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:42
 msgid "Source"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1689
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2308
 msgid "Source IP contains (! to exclude)"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1690
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/log.js:333
+msgid "Source port"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2313
 msgid "Source port (! to exclude)"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1717
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1270
+msgid "Summary data is unavailable; show rows to inspect the sample."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2150
+msgid "Summary mode"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1272
+msgid "Summary was bounded before all categories could be included."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2387
+msgid ""
+"Switching tabs pauses polling; returning performs one catch-up poll. "
+"Hostnames are off by default because lookups add work."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2397
 msgid ""
 "The rate shown for WAN logging is the firewall zone log_limit. OpenWrt "
 "defaults to 10/minute when no explicit limit is configured; fwlive does not "
 "impose this cap."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1714
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2392
+msgid ""
+"The router log ring may evict older events before fwlive reads them. fwlive "
+"cannot recover evicted entries or change forwarding behavior."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2357
 msgid ""
 "The table updates automatically when your firewall logs traffic. Use Pause "
 "if it moves too fast."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1551
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2047
 msgid "Theme tint fallback"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:31
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:335
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:345
+msgid "Then ping the router."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:34
 msgid "Time"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:219
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1277
+msgid "Top drops"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1280
+msgid "Top rules"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1274
+msgid "Top talkers"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:153
+msgid "Turn it back off with the WAN logging control on the watch strip."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:284
 msgid ""
 "Turns on WAN zone drop/reject logging (same as Network → Firewall → wan → "
 "Log). Rate-limited by the zone log_limit (OpenWrt default 10/minute). Normal "
 "LAN browsing is not logged."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:126
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:143
+msgid "Turns on logging for the WAN firewall zone and reloads the firewall."
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:151
 msgid "Undo:"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1722
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2417
 msgid "Use Detail for all columns (flags, length, raw message)."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1564
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1568
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2065
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2071
 msgid "View"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:615
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:751
 msgid "WAN drop/reject logging is off."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:204
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:251
 msgid ""
 "WAN drop/reject logging is on. Blocked inbound WAN traffic will show up "
 "here. Normal LAN browsing will not."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:579
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:716
 msgid ""
 "WAN drop/reject logging is on. Blocked inbound traffic should appear here as "
 "it happens — not normal LAN browsing."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:581
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:718
 msgid "WAN logging is already enabled."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:88
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:97
 msgid "WAN logging on"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:94
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:106
 msgid "WAN logging on (%s). Click to disable."
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:77
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:84
 msgid "WAN logging unavailable: missing kernel log modules"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:70
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:74
 msgid "WAN logging unavailable: no WAN zone"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:203
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:247
 msgid "Waiting for firewall events"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:993
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1545
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1441
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2035
 msgid "Watching"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1603
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2125
 msgid "Wrap"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:123
-msgid "allow/deny rules, LAN logging, or anything else."
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1026
+msgid "buffer filling"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:828
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:69
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2263
+msgid "block"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1030
 msgid "buffer full"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:81
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:90
 msgid "default 10/minute"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:70
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2264
+msgid "drop"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:59
+msgid "forward"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:57
+msgid "in"
 msgstr ""
 
 #: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:28
 msgid "is"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:823
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1025
 msgid "loading buffer"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:923
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1376
 msgid "loading…"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:37
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1250
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1259
+msgid "none"
+msgstr ""
+
 #: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:44
 msgid "not"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1107
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1579
 msgid "not AH"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1106
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1578
 msgid "not ESP"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1105
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1577
 msgid "not GRE"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1102
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1574
 msgid "not ICMP"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1103
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1575
 msgid "not ICMPv6"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1104
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1576
 msgid "not IGMP"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1108
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1580
 msgid "not SCTP"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1100
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1572
 msgid "not TCP"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1101
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1573
 msgid "not UDP"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1666
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2269
 msgid "not block"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1665
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/chips.js:37
+msgid "not contains"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2268
 msgid "not drop"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1664
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2267
 msgid "not pass"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1667
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2270
 msgid "not reject"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1668
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2271
 msgid "not unknown"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1679
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2286
 msgid "or type…"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:830
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:58
+msgid "out"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:68
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2262
+msgid "pass"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:71
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2265
+msgid "reject"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1032
 msgid "render paused (high rate)"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:832
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1042
+msgid "resolve paused (load)"
+msgstr ""
+
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1044
 msgid "scroll frozen — scroll to top to follow live"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:118
-msgid "sets log on the WAN firewall zone and reloads the firewall."
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:1040
+msgid "truncated"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:254
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:258
-msgid "then ping the router."
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/table.js:60
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:2266
+msgid "unknown"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:128
-msgid "turn it back off with the WAN logging on control on the watch strip."
-msgstr ""
-
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:512
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:637
 msgid "using fw4"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:510
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/view/status/fwlive.js:636
 msgid "using iptables"
 msgstr ""
 
-#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:89
+#: applications/luci-app-fwlive/htdocs/luci-static/resources/fwlive/logging.js:98
 msgid "· %s"
 msgstr ""
