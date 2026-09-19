@@ -8,16 +8,22 @@
 #   resolve — reverse DNS for IP addresses (BusyBox nslookup)
 #   logging_status — WAN zone logging readiness (no args)
 #   enable_wan_logging / disable_wan_logging — opt-in WAN zone log=1 (no args)
+#
+# Entry point (rpcd plugin). Sourced helpers inherit these options.
+set -eu
+# shellcheck disable=SC3040
+(set -o pipefail) 2>/dev/null && set -o pipefail
 
 FW4_TAG='!fw4: '
 LIBEXEC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 FILTER_SH="$LIBEXEC_DIR/fwlive-log-filter.sh"
 LOGGING_SH="$LIBEXEC_DIR/fwlive-logging.sh"
+ADAPTIVE_SH="$LIBEXEC_DIR/fwlive-adaptive-cap.sh"
 # Max reverse-DNS lookups per resolve call (~32 names keeps nslookup load bounded on small routers).
 RESOLVE_MAX=32
 # Per-lookup nslookup timeout (integer seconds — BusyBox `timeout` truncates
 # fractional values to 0 on OpenWrt 23.05/1.36, so 0.5 would silently
-# degrade to no timeout. The wall-clock budget
+# degrade to no timeout; luna fold 2026-08-10). The wall-clock budget
 # below is the real whole-call bound; this per-lookup cap only prevents a
 # single hung resolver from dominating the budget. LAN/local-resolver
 # lookups are single-digit ms, so 1s is ample. Passed as argv to
@@ -39,6 +45,8 @@ RULESMAP_IPTABLES_FILE='/tmp/rulesmap'
 # json_escape lives in fwlive-logging.sh so prerm can source that file alone.
 # shellcheck disable=SC1090,SC1091 # LOGGING_SH resolves to sibling ../fwlive-logging.sh
 . "$LOGGING_SH"
+# shellcheck disable=SC1090,SC1091
+. "$ADAPTIVE_SH"
 
 slug_key() {
 	echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' _' '--'
@@ -83,7 +91,9 @@ map_add() {
 }
 
 uci_rule_names() {
-	uci -q show firewall 2>/dev/null | sed -n "s/^firewall\.@rule\[[0-9]*\]\.name='\(.*\)'$/\1/p"
+	# uci missing / empty firewall config is "no names", not fatal.
+	# pipefail + set -e cannot apply to this pipeline.
+	uci -q show firewall 2>/dev/null | sed -n "s/^firewall\.@rule\[[0-9]*\]\.name='\(.*\)'$/\1/p" || true
 }
 
 is_uci_style_name() {
@@ -270,6 +280,64 @@ _fwlive_mktemp() {
 	printf '%s' "$_mk_file"
 }
 
+enrich_rules_dump() {
+	_dump_prefix="$1"
+	_dump_kind="$2"
+
+	case "$_dump_kind" in
+		nft)
+			_dump_error='nft_failed'
+			;;
+		iptables)
+			_dump_error='iptables_failed'
+			;;
+		ip6tables)
+			_dump_error='ip6tables_failed'
+			;;
+		*)
+			return 1
+			;;
+	esac
+
+	_rules_dump=$(_fwlive_mktemp "$_dump_prefix") || _rules_dump=''
+	if [ -n "$_rules_dump" ]; then
+		# Keep the dump command and stream parser paired by backend. The
+		# ip6tables caller is availability-gated below; its empty-error
+		# precedence is intentionally preserved in the mktemp branch.
+		if case "$_dump_kind" in
+			nft)
+				nft_list_ruleset >"$_rules_dump" 2>/dev/null
+				;;
+			iptables|ip6tables)
+				run_with_timeout "$IPTABLES_TIMEOUT" "${_dump_kind}-save" >"$_rules_dump" 2>/dev/null
+				;;
+			esac
+		then
+			case "$_dump_kind" in
+				nft)
+					map_from_nft_stream labeled <"$_rules_dump"
+					map_from_nft_stream unlabeled <"$_rules_dump"
+					;;
+				iptables|ip6tables)
+					map_from_iptables_save_stream labeled <"$_rules_dump"
+					map_from_iptables_save_stream unlabeled <"$_rules_dump"
+					;;
+			esac
+		elif [ -z "$_enrich_error" ]; then
+			_enrich_error="$_dump_error"
+		fi
+		rm -f "$_rules_dump"
+	elif [ "$_dump_kind" = ip6tables ]; then
+		# IPv6 enrichment is optional and must not replace an earlier
+		# IPv4/backend error when its temp file cannot be allocated.
+		if [ -z "$_enrich_error" ]; then
+			_enrich_error='mktemp_failed'
+		fi
+	else
+		_enrich_error='mktemp_failed'
+	fi
+}
+
 build_rules_map() {
 	OUT=''
 	_map_keys=0
@@ -283,45 +351,19 @@ build_rules_map() {
 
 	case "$backend" in
 		nft)
-			_rules_dump=$(_fwlive_mktemp fwlive-nft) || _rules_dump=''
-			if [ -n "$_rules_dump" ]; then
-				# Dumps land on /tmp (tmpfs). Duration bounded by
-				# NFT_TIMEOUT / IPTABLES_TIMEOUT; key/byte caps in map_add.
-				if nft_list_ruleset >"$_rules_dump" 2>/dev/null; then
-					map_from_nft_stream labeled <"$_rules_dump"
-					map_from_nft_stream unlabeled <"$_rules_dump"
-				fi
-				rm -f "$_rules_dump"
-			else
-				_enrich_error='mktemp_failed'
-			fi
+			enrich_rules_dump fwlive-nft nft
 			;;
 		iptables)
-			_rules_dump=$(_fwlive_mktemp fwlive-ipt) || _rules_dump=''
-			if [ -n "$_rules_dump" ]; then
-				if run_with_timeout "$IPTABLES_TIMEOUT" iptables-save >"$_rules_dump" 2>/dev/null; then
-					map_from_iptables_save_stream labeled <"$_rules_dump"
-					map_from_iptables_save_stream unlabeled <"$_rules_dump"
-				fi
-				rm -f "$_rules_dump"
-			else
-				_enrich_error='mktemp_failed'
-			fi
+			enrich_rules_dump fwlive-ipt iptables
 			if command -v ip6tables-save >/dev/null 2>&1; then
-				_rules_dump=$(_fwlive_mktemp fwlive-ip6t) || _rules_dump=''
-				if [ -n "$_rules_dump" ]; then
-					if run_with_timeout "$IPTABLES_TIMEOUT" ip6tables-save >"$_rules_dump" 2>/dev/null; then
-						map_from_iptables_save_stream labeled <"$_rules_dump"
-						map_from_iptables_save_stream unlabeled <"$_rules_dump"
-					fi
-					rm -f "$_rules_dump"
-				elif [ -z "$_enrich_error" ]; then
-					_enrich_error='mktemp_failed'
-				fi
+				enrich_rules_dump fwlive-ip6t ip6tables
 			fi
 			;;
 	esac
 
+	if [ "$backend" = unknown ] && [ -z "$_enrich_error" ]; then
+		_enrich_error='no_backend'
+	fi
 	_rules_json="{\"backend\":\"$backend\",\"rules\":{$OUT}"
 	if [ -n "$_enrich_error" ]; then
 		_rules_json="${_rules_json},\"error\":\"${_enrich_error}\""
@@ -383,24 +425,24 @@ poll_lines_from_input() {
 		return 0
 	fi
 
-	# Device-only helper; not present on host CI runners.
-	# shellcheck disable=SC1091
-	. /usr/share/libubox/jshn.sh
-	json_load "$input" 2>/dev/null || {
-		printf '%s' "$lines"
-		return 0
-	}
-
-	if json_select addresses 2>/dev/null; then
-		# json_get_var assigns into the named shell variable (jshn).
-		json_get_var first 1
-		json_select ..
-		# shellcheck disable=SC2154 # set by json_get_var above
-		case "$first" in
-			''|*[!0-9]*) ;;
-			*) lines="$first" ;;
-		esac
-	fi
+	# jshn uses intentionally unset state variables. Keep nounset disabled in
+	# this subshell so strict mode is restored automatically on every exit.
+	_first=$( (
+		set +u
+		. /usr/share/libubox/jshn.sh
+		# json_load masks a failing jshn exit through eval. Check the real
+		# parser once, then evaluate only its generated shell assignments.
+		_json_no_warning=1
+		_json_code=$(jshn -r "$input" 2>/dev/null) || exit 1
+		eval "$_json_code" || exit 1
+		if ! json_select addresses 2>/dev/null; then exit 1; fi
+		json_get_var first 1 || exit 1
+		printf '%s' "${first:-}"
+	) ) || _first=
+	case "${_first:-}" in
+		''|*[!0-9]*) ;;
+		*) lines="$_first" ;;
+	esac
 
 	lines=$(poll_clamp_lines "$lines")
 
@@ -409,22 +451,65 @@ poll_lines_from_input() {
 
 fetch_firewall_logs() {
 	input="$1"
-	lines=$(poll_lines_from_input "$input")
-	# lines is numeric-clamped; stream/oneshot are fixed (not caller-controlled).
-	raw=$(ubus call log read "{\"lines\":$lines,\"stream\":false,\"oneshot\":true}" 2>/dev/null) \
-		|| raw='{"log":[]}'
+	requested=$(poll_lines_from_input "$input")
+	# shellcheck disable=SC2046
+	set -- $(fwlive_adaptive_plan "$requested")
+	lines=$1
+	shed_flag=${2:-0}
+	# Adaptive plan prints: lines shed bucket
+	start_cs=$(fwlive_adaptive_clock_cs)
+	# Drop dead oneshot flag — only consumed on logd's stream branch.
+	if ! raw=$(ubus call log read "{\"lines\":$lines,\"stream\":false}" 2>/dev/null); then
+		# Do not record ~0 ms as cold: failure is not healthy fast processing
+		# and must not clear an existing hot/shed cap.
+		out='{"log":[],"error":"log_read_failed"}'
+		fwlive_adaptive_merge_reply "$out" "$shed_flag" "$lines" 0 0 0
+		return 0
+	fi
+
+	# Summary aggregation is part of the adaptive contract. Keep it out of
+	# adaptive=0 replies, while the classifier still remains the single pass
+	# over decoded log entries.
+	if fwlive_adaptive_enabled; then
+		FWLIVE_SUMMARY=1
+	else
+		FWLIVE_SUMMARY=0
+	fi
+	export FWLIVE_SUMMARY
 
 	# Do not swallow a filter failure into a silent empty table.
 	# If the filter exits non-zero but still printed JSON, keep it.
 	# Empty success is not valid poll JSON — the shipped filter always
 	# prints {"log":[...]}, but a stub/regression must not emit a blank body.
+	_filter_ok=1
 	if ! out=$(printf '%s' "$raw" | "$FILTER_SH"); then
+		_filter_ok=0
 		if [ -z "$out" ]; then
 			out='{"log":[],"error":"filter_failed"}'
 		fi
 	fi
-	[ -n "$out" ] || out='{"log":[]}'
-	printf '%s' "$out"
+	if [ -z "$out" ]; then
+		_filter_ok=0
+		out='{"log":[],"error":"filter_empty"}'
+	fi
+	# A classifier can return a structured error body while exiting zero (for
+	# example classifier_missing).  Preserve the error for the caller, but do
+	# not let it overwrite a prior hot state as a healthy fast sample.
+	case "$out" in
+		*'"error":'*) _filter_ok=0 ;;
+	esac
+	end_cs=$(fwlive_adaptive_clock_cs)
+	# Uptime wrap / skew: end < start — do not record as cold.
+	if [ "$_filter_ok" = 1 ] && [ "$end_cs" -ge "$start_cs" ]; then
+		_dur=$(((end_cs - start_cs) * 10))
+		fwlive_adaptive_record "$_dur" "$lines"
+	fi
+	# The filter carries messages_received from its jsonfilter enumeration;
+	# failed/read-invalid paths keep the merge fallback at 0.
+	_trunc=0
+	[ "$shed_flag" = 1 ] && _trunc=1
+	[ "$lines" -lt "$requested" ] && _trunc=1
+	fwlive_adaptive_merge_reply "$out" "$shed_flag" "$lines" "$_trunc" 0 "$_filter_ok"
 }
 
 poll_logs() {
@@ -462,15 +547,16 @@ resolve_hostname() {
 	[ -n "$ip" ] || return 1
 	is_resolvable_address "$ip" || return 1
 	command -v nslookup >/dev/null 2>&1 || return 1
-	out=$(run_with_timeout "$RESOLVE_TIMEOUT" nslookup "$ip")
+	# timeout/nslookup miss is "no PTR", not a plugin abort.
+	out=$(run_with_timeout "$RESOLVE_TIMEOUT" nslookup "$ip") || return 1
 	[ -n "$out" ] || return 1
-	name=$(parse_nslookup_name "$out")
+	name=$(parse_nslookup_name "$out") || return 1
 	[ -n "$name" ] || return 1
 	printf '%s' "$name"
 }
 
-# Strict IPv4/IPv6 validation before nslookup: the old char-class
-# check admitted hostname-shaped tokens of hex chars + dots/colons
+# Strict IPv4/IPv6 validation before nslookup: the old char-class check
+# admitted hostname-shaped tokens of hex chars + dots/colons
 # (e.g. "dead.beef.cafe.baad"), letting the resolver fall back to upstream DNS
 # queries chosen by an authenticated session. Validate the real address
 # families here so nslookup only ever sees genuine numeric addresses.
@@ -563,6 +649,12 @@ resolve_addresses() {
 		return 0
 	fi
 
+	# Load shed: previous poll was hot.
+	if fwlive_adaptive_is_hot; then
+		printf '{"names":{},"disabled":"load"}'
+		return 0
+	fi
+
 	# Wall-clock budget clock starts at the TRUE function entry: the budget
 	# must bound the whole call — including read_rpc_input (stalled stdin
 	# must not escape the budget) and json parsing. `date +%s` can jump
@@ -575,71 +667,88 @@ resolve_addresses() {
 	OUT=''
 
 	if ! command -v jshn >/dev/null 2>&1; then
-		printf '{"names":{}}'
+		printf '{"names":{},"error":"jshn_missing"}'
 		return 0
 	fi
 
-	# shellcheck disable=SC1091
-	. /usr/share/libubox/jshn.sh
-	json_load "$input" 2>/dev/null || {
-		printf '{"names":{}}'
-		return 0
-	}
-
-	if json_select addresses 2>/dev/null; then
+	_addresses=$( (
+		set +u
+		. /usr/share/libubox/jshn.sh
+		# json_load masks a failing jshn exit through eval. Check the real
+		# parser once, then evaluate only its generated shell assignments.
+		_json_no_warning=1
+		_json_code=$(jshn -r "$input" 2>/dev/null) || exit 1
+		eval "$_json_code" || exit 1
+		if ! json_select addresses 2>/dev/null; then exit 0; fi
 		idx=1
-		# json_get_type / json_get_var assign into named shell variables (jshn).
 		# shellcheck disable=SC2154
 		while json_get_type atype "$idx" && [ "$atype" = string ]; do
+			json_get_var ip "$idx" || exit 1
+			# Preserve JSON element boundaries in the newline transport.
+			# Invalid addresses (including embedded newlines) never leave it.
+			if is_resolvable_address "${ip:-}"; then
+				printf '%s\n' "$ip"
+			fi
+			idx=$((idx + 1))
+		done
+	) ) || {
+		printf '{"names":{},"error":"invalid_input"}'
+		return 0
+	}
+	while IFS= read -r ip; do
 			[ "$count" -ge "$RESOLVE_MAX" ] && break
 			# Abort cleanly once the whole-call wall-clock budget is spent;
 			# never START a lookup past the budget.
 			now=$(date +%s)
 			[ $((now - start)) -ge "$RESOLVE_BUDGET" ] && break
-			json_get_var ip "$idx"
-			if ! is_resolvable_address "$ip"; then
-				idx=$((idx + 1))
+			# Missing/empty element: set -u cannot read bare $ip.
+			if ! is_resolvable_address "${ip:-}"; then
 				continue
 			fi
-			name=$(resolve_hostname "$ip")
+			# NXDOMAIN / timeout: resolve_hostname returns 1. set -e
+			# cannot apply to this assignment.
+			name=$(resolve_hostname "$ip") || name=
 			if [ -n "$name" ]; then
 				map_add "$ip" "$name"
 				count=$((count + 1))
 			fi
-			idx=$((idx + 1))
-		done
-		json_select ..
-	fi
+		done <<EOF
+$_addresses
+EOF
 
 	printf '{"names":{%s}}' "$OUT"
+}
+
+check_eq() {
+	_check_name="$1"
+	_check_got="$2"
+	_check_expected="$3"
+	_check_failure="$4"
+	if [ "$_check_got" != "$_check_expected" ]; then
+		# Keep the failure suffix at each call site so stderr stays byte-for-byte
+		# identical to the pre-extraction selftest messages.
+		echo "$_check_name: $_check_failure" >&2
+		return 1
+	fi
 }
 
 run_selftest() {
 	input=$(printf 'a\\b"c\nd\te')
 	escaped=$(printf '%s' "$input" | json_escape)
 	expected=$(printf 'a\\\\b\\"c\\nd\\te')
-	if [ "$escaped" != "$expected" ]; then
-		echo "json_escape: mismatch" >&2
-		return 1
-	fi
+	check_eq json_escape "$escaped" "$expected" mismatch || return 1
 
 	# Remaining C0 controls must become \u00XX (RFC 8259), not raw bytes.
 	input=$(printf 'x\001y\037z')
 	escaped=$(printf '%s' "$input" | json_escape)
 	expected='x\u0001y\u001fz'
-	if [ "$escaped" != "$expected" ]; then
-		echo "json_escape C0: expected $expected got $escaped" >&2
-		return 1
-	fi
+	check_eq 'json_escape C0' "$escaped" "$expected" "expected $expected got $escaped" || return 1
 
 	# Blank lines are data (paragraph-mode RS="" used to drop them).
 	input=$(printf 'a\n\nb')
 	escaped=$(printf '%s' "$input" | json_escape)
 	expected=$(printf 'a\\n\\nb')
-	if [ "$escaped" != "$expected" ]; then
-		echo "json_escape blank line: expected $expected got $escaped" >&2
-		return 1
-	fi
+	check_eq 'json_escape blank line' "$escaped" "$expected" "expected $expected got $escaped" || return 1
 
 	if is_resolvable_address 'not an ip'; then
 		echo 'is_resolvable_address: expected reject for spaces' >&2
@@ -730,25 +839,13 @@ run_selftest() {
 	fi
 
 	got=$(poll_clamp_lines "99999999999999999999")
-	if [ "$got" != "$POLL_LINES_MAX" ]; then
-		echo "poll_clamp_lines: over-long expected $POLL_LINES_MAX got $got" >&2
-		return 1
-	fi
+	check_eq poll_clamp_lines "$got" "$POLL_LINES_MAX" "over-long expected $POLL_LINES_MAX got $got" || return 1
 	got=$(poll_clamp_lines "0")
-	if [ "$got" != "50" ]; then
-		echo "poll_clamp_lines: zero expected 50 got $got" >&2
-		return 1
-	fi
+	check_eq poll_clamp_lines "$got" "50" "zero expected 50 got $got" || return 1
 	got=$(poll_clamp_lines "2001")
-	if [ "$got" != "$POLL_LINES_MAX" ]; then
-		echo "poll_clamp_lines: 2001 expected $POLL_LINES_MAX got $got" >&2
-		return 1
-	fi
+	check_eq poll_clamp_lines "$got" "$POLL_LINES_MAX" "2001 expected $POLL_LINES_MAX got $got" || return 1
 	got=$(poll_clamp_lines "500")
-	if [ "$got" != "500" ]; then
-		echo "poll_clamp_lines: expected 500 got $got" >&2
-		return 1
-	fi
+	check_eq poll_clamp_lines "$got" "500" "expected 500 got $got" || return 1
 
 	if ! _fwlive_tmp_dir_ok; then
 		echo "_fwlive_tmp_dir_ok: /tmp must be a sticky directory" >&2
@@ -759,18 +856,12 @@ run_selftest() {
 Address: 127.0.0.1:53
 
 8.8.8.8.in-addr.arpa	name = dns.google.")
-	if [ "$got" != "dns.google" ]; then
-		echo "parse_nslookup_name: bind-style expected dns.google got '$got'" >&2
-		return 1
-	fi
+	check_eq parse_nslookup_name "$got" "dns.google" "bind-style expected dns.google got '$got'" || return 1
 	got=$(parse_nslookup_name "Server:		127.0.0.1
 Address:	127.0.0.1:53
 
 Address 1: 8.8.8.8 dns.google.")
-	if [ "$got" != "dns.google" ]; then
-		echo "parse_nslookup_name: busybox Address N expected dns.google got '$got'" >&2
-		return 1
-	fi
+	check_eq parse_nslookup_name "$got" "dns.google" "busybox Address N expected dns.google got '$got'" || return 1
 	got=$(parse_nslookup_name "Server: 192.168.1.1
 Address 1: 192.168.1.1 router.lan
 
@@ -782,12 +873,20 @@ Address 1: 8.8.8.8 dns.google")
 	fi
 	got=$(parse_nslookup_name "Server: 127.0.0.1
 Address: 127.0.0.1:53")
-	if [ -n "$got" ]; then
-		echo "parse_nslookup_name: server-only expected empty got '$got'" >&2
-		return 1
-	fi
+	check_eq parse_nslookup_name "$got" '' "server-only expected empty got '$got'" || return 1
 
 	run_logging_selftest || return 1
+
+	# Strict-mode smoke: status JSON uses soft-fail helpers
+	# (uci miss, empty WAN zone). Must not abort under dash/ash set -e.
+	_status=$(build_logging_status_json) || {
+		echo "build_logging_status_json: aborted under set -e" >&2
+		return 1
+	}
+	case "$_status" in
+		*'"blockers":'*) ;;
+		*) echo "build_logging_status_json: missing blockers: $_status" >&2; return 1 ;;
+	esac
 
 	if ! command -v jshn >/dev/null 2>&1; then
 		echo "skip: jshn not available (poll cap via jshn not tested)" >&2
@@ -795,46 +894,25 @@ Address: 127.0.0.1:53")
 	fi
 
 	got=$(poll_lines_from_input '{"addresses":["999999"]}')
-	if [ "$got" != "$POLL_LINES_MAX" ]; then
-		echo "poll_lines_from_input: expected $POLL_LINES_MAX got $got" >&2
-		return 1
-	fi
+	check_eq poll_lines_from_input "$got" "$POLL_LINES_MAX" "expected $POLL_LINES_MAX got $got" || return 1
 
 	got=$(poll_lines_from_input '{"addresses":["99999999999999999999"]}')
-	if [ "$got" != "$POLL_LINES_MAX" ]; then
-		echo "poll_lines_from_input: over-long expected $POLL_LINES_MAX got $got" >&2
-		return 1
-	fi
+	check_eq poll_lines_from_input "$got" "$POLL_LINES_MAX" "over-long expected $POLL_LINES_MAX got $got" || return 1
 	got=$(poll_lines_from_input '{"addresses":["18446744073709551616"]}')
-	if [ "$got" != "$POLL_LINES_MAX" ]; then
-		echo "poll_lines_from_input: 18446744073709551616 expected $POLL_LINES_MAX got $got" >&2
-		return 1
-	fi
+	check_eq poll_lines_from_input "$got" "$POLL_LINES_MAX" "18446744073709551616 expected $POLL_LINES_MAX got $got" || return 1
 	got=$(poll_lines_from_input '{"addresses":["0"]}')
-	if [ "$got" != "50" ]; then
-		echo "poll_lines_from_input: zero expected 50 got $got" >&2
-		return 1
-	fi
+	check_eq poll_lines_from_input "$got" "50" "zero expected 50 got $got" || return 1
 	got=$(poll_lines_from_input '{"addresses":["2001"]}')
-	if [ "$got" != "$POLL_LINES_MAX" ]; then
-		echo "poll_lines_from_input: 2001 expected $POLL_LINES_MAX got $got" >&2
-		return 1
-	fi
+	check_eq poll_lines_from_input "$got" "$POLL_LINES_MAX" "2001 expected $POLL_LINES_MAX got $got" || return 1
 	got=$(poll_lines_from_input '{"addresses":["500"]}')
-	if [ "$got" != "500" ]; then
-		echo "poll_lines_from_input: expected 500 got $got" >&2
-		return 1
-	fi
+	check_eq poll_lines_from_input "$got" "500" "expected 500 got $got" || return 1
 	got=$(poll_lines_from_input '{"addresses":["100"]}')
-	if [ "$got" != "100" ]; then
-		echo "poll_lines_from_input: expected 100 got $got" >&2
-		return 1
-	fi
+	check_eq poll_lines_from_input "$got" "100" "expected 100 got $got" || return 1
 
 	return 0
 }
 
-case "$1" in
+case "${1:-}" in
 	__selftest)
 		run_selftest
 		exit $?
@@ -845,22 +923,22 @@ case "$1" in
 		exit $?
 		;;
 	__poll_clamp)
-		poll_clamp_lines "$2"
+		poll_clamp_lines "${2:-}"
 		exit $?
 		;;
 	__tmp_dir_ok)
-		_fwlive_tmp_dir_ok "$2"
+		_fwlive_tmp_dir_ok "${2:-}"
 		exit $?
 		;;
 	__resolve_one)
-		if name=$(resolve_hostname "$2"); then
+		if name=$(resolve_hostname "${2:-}"); then
 			printf '%s\n' "$name"
 			exit 0
 		fi
 		exit 1
 		;;
 	__parse_nslookup)
-		name=$(parse_nslookup_name "$2")
+		name=$(parse_nslookup_name "${2:-}")
 		if [ -n "$name" ]; then
 			printf '%s\n' "$name"
 			exit 0
@@ -874,15 +952,16 @@ case "$1" in
 		echo '{"rules":{},"poll":{"addresses":[]},"resolve":{"addresses":[]},"logging_status":{},"enable_wan_logging":{},"disable_wan_logging":{}}'
 		;;
 	call)
-		case "$2" in
+		case "${2:-}" in
 			rules)
 				build_rules_map
 				;;
 			poll)
-				poll_logs "$3"
+				# rpcd may omit argv $3 and pass JSON on stdin.
+				poll_logs "${3:-}"
 				;;
 			resolve)
-				resolve_addresses "$3"
+				resolve_addresses "${3:-}"
 				;;
 			logging_status)
 				build_logging_status_json

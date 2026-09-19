@@ -3,6 +3,11 @@
 # Copyright 2025-2026 Lucas Albers <lucas.b.albers@gmail.com>
 #
 # WAN zone logging helpers for ubus fwlive (logging_status / enable / disable).
+#
+# Sourced library (rpcd plugin, package prerm). Do not `set -euo pipefail`
+# here: prerm is best-effort (`restore ... || logger`; exit 0) and callers
+# expect soft failures. The rpcd entry point enables strict mode; critical
+# paths use explicit `|| return 1` / `|| true`.
 
 NF_LOG_IPV4='/proc/sys/net/netfilter/nf_log/2'
 NF_LOG_IPV6='/proc/sys/net/netfilter/nf_log/10'
@@ -21,6 +26,54 @@ NF_LOG_IPV6='/proc/sys/net/netfilter/nf_log/10'
 # Overridable for tests/containers (default is root-only /etc/fwlive).
 WAN_LOG_LOCK_FILE="${FWLIVE_WAN_LOG_LOCK_FILE:-/etc/fwlive/logging.lock}"
 WAN_LOG_BASELINE_FILE="${FWLIVE_WAN_LOG_BASELINE_FILE:-/etc/fwlive/wan-log-baseline}"
+
+weak_device_detected() {
+	# Path overrides are test hooks; production defaults stay in procfs.
+	_meminfo=${FWLIVE_MEMINFO_PATH:-/proc/meminfo}
+	_cpuinfo=${FWLIVE_CPUINFO_PATH:-/proc/cpuinfo}
+	_mem_total=
+	if [ -r "$_meminfo" ]; then
+		while IFS= read -r _line; do
+			case "$_line" in
+				MemTotal:*)
+					_mem_total=${_line#MemTotal:}
+					while :; do
+						case "$_mem_total" in
+							[[:space:]]*) _mem_total=${_mem_total#?} ;;
+							*) break ;;
+						esac
+					done
+					_mem_total=${_mem_total%%[[:space:]]*}
+					break
+					;;
+			esac
+		done <"$_meminfo" || :
+	fi
+
+	_cores=0
+	_cpu_valid=0
+	if [ -r "$_cpuinfo" ]; then
+		while IFS= read -r _line; do
+			case "$_line" in
+				processor[[:space:]]*:*)
+					_cores=$((_cores + 1))
+					_cpu_valid=1
+					;;
+			esac
+		done <"$_cpuinfo" || :
+	fi
+
+	case "$_mem_total" in
+		''|*[!0-9]*) printf 'false\n'; return 0 ;;
+	esac
+	[ "$_cpu_valid" = 1 ] || { printf 'false\n'; return 0; }
+	# MemTotal is reported in KiB; 256 MiB is 262144 KiB.
+	if [ "$_mem_total" -lt 262144 ] || [ "$_cores" -le 1 ]; then
+		printf 'true\n'
+	else
+		printf 'false\n'
+	fi
+}
 
 # RFC 8259 string escape. Lives here so prerm can source this file
 # standalone. rpcd sources us and must not redefine this.
@@ -121,11 +174,16 @@ find_wan_zone_section() {
 	# Match anonymous (@zone[N]) and named (e.g. wan) sections whose
 	# name option is 'wan'. Prefer the first section whose type is
 	# zone; skip non-zone sections that happen to share name='wan'.
+	# uci missing / no wan zone is empty, not fatal. pipefail + set -e
+	# cannot apply to this pipeline.
 	_zones=$(uci -q show firewall 2>/dev/null \
-		| sed -n "s/^firewall\.\([^.]*\)\.name='wan'$/\1/p")
+		| sed -n "s/^firewall\.\([^.]*\)\.name='wan'$/\1/p") || true
 	for zone in $_zones; do
 		[ -n "$zone" ] || continue
-		[ "$(uci -q get "firewall.${zone}" 2>/dev/null)" = "zone" ] || continue
+		# uci -q get exits 1 on a missing section. Capture with || true so
+		# set -e cannot abort inside "$(…)" before || continue.
+		_type=$(uci -q get "firewall.${zone}" 2>/dev/null || true)
+		[ "$_type" = "zone" ] || continue
 		printf '%s' "$zone"
 		return 0
 	done
@@ -133,27 +191,39 @@ find_wan_zone_section() {
 }
 
 firewall_changes_pending() {
-	pending="$(uci -q changes firewall 2>/dev/null)"
+	# uci miss is "no pending changes". set -e cannot apply.
+	pending="$(uci -q changes firewall 2>/dev/null || true)"
 	[ -n "$pending" ]
 }
 
 wan_zone_log_value() {
 	zone="$1"
 	[ -n "$zone" ] || return 1
-	uci -q get "firewall.${zone}.log" 2>/dev/null
+	# Unset option is a valid empty value; uci -q get exits 1.
+	uci -q get "firewall.${zone}.log" 2>/dev/null || true
+}
+
+# Resolve a firewall section id to its canonical cfgXXXX form (issue B-1 /
+# multi-model audit). `uci -X show` disables @type[N] aliases so @zone[0] and
+# cfgXXXX for the same anonymous section compare equal. Empty on failure.
+uci_canonical_firewall_section() {
+	_sid="$1"
+	[ -n "$_sid" ] || return 1
+	uci -q -X show "firewall.${_sid}" 2>/dev/null \
+		| sed -n '1s/^firewall\.\([^=.]*\)=.*/\1/p'
 }
 
 # True when two firewall section ids refer to the same WAN zone.
+# Compare canonical cfg ids — do NOT treat every name=wan zone as identical
+# (duplicate wan sections would under-match foreign .log deltas as ours).
 wan_firewall_zone_same() {
 	_a="$1"
 	_b="$2"
 	[ -n "$_a" ] && [ -n "$_b" ] || return 1
 	[ "$_a" = "$_b" ] && return 0
-	_na=$(uci -q get "firewall.${_a}.name" 2>/dev/null) || return 1
-	_nb=$(uci -q get "firewall.${_b}.name" 2>/dev/null) || return 1
-	_ta=$(uci -q get "firewall.${_a}" 2>/dev/null) || return 1
-	_tb=$(uci -q get "firewall.${_b}" 2>/dev/null) || return 1
-	[ "$_na" = "wan" ] && [ "$_nb" = "wan" ] && [ "$_ta" = "zone" ] && [ "$_tb" = "zone" ]
+	_ca=$(uci_canonical_firewall_section "$_a") || return 1
+	_cb=$(uci_canonical_firewall_section "$_b") || return 1
+	[ -n "$_ca" ] && [ -n "$_cb" ] && [ "$_ca" = "$_cb" ]
 }
 
 wan_log_staged_line_section() {
@@ -274,7 +344,8 @@ maybe_snapshot_wan_log_baseline() {
 restore_wan_log_baseline() {
 	path="$(wan_log_baseline_path)"
 	[ -f "$path" ] || return 0
-	baseline=$(cat "$path" 2>/dev/null)
+	# Empty file is a valid "option was unset" baseline.
+	baseline=$(cat "$path" 2>/dev/null || true)
 	zone=$(find_wan_zone_section)
 	if [ -z "$zone" ]; then
 		logger -t fwlive "WAN log baseline restore skipped: no WAN zone" 2>/dev/null || true
@@ -353,7 +424,7 @@ wan_filter_log_clear_value() {
 read_nf_log_backend() {
 	path="$1"
 	[ -f "$path" ] || return 1
-	val=$(cat "$path" 2>/dev/null)
+	val=$(cat "$path" 2>/dev/null) || return 1
 	[ -n "$val" ] && [ "$val" != 'none' ]
 }
 
@@ -393,8 +464,9 @@ collect_logging_blockers() {
 	check_nf_log_ipv4 || logging_blockers_append 'nf_log_ipv4_missing'
 	check_nf_log_ipv6 || logging_blockers_append 'nf_log_ipv6_missing'
 
-	[ -n "$LOGGING_BLOCKERS" ] || return 0
-	return 1
+	# Report via LOGGING_BLOCKERS, not exit status: return 1 would abort
+	# build_logging_status_json under set -e.
+	return 0
 }
 
 collect_logging_warnings() {
@@ -404,8 +476,8 @@ collect_logging_warnings() {
 	# Warnings are diagnostics only — do not gate the enable-logging CTA.
 	command -v timeout >/dev/null 2>&1 || logging_warnings_append 'timeout_missing'
 
-	[ -n "$LOGGING_WARNINGS" ] || return 0
-	return 1
+	# Report via LOGGING_WARNINGS, not exit status.
+	return 0
 }
 
 json_null_or_string() {
@@ -420,8 +492,13 @@ json_null_or_string() {
 
 build_logging_status_json() {
 	zone=$(find_wan_zone_section)
-	log_val=$(wan_zone_log_value "$zone")
-	limit_val=$( [ -n "$zone" ] && uci -q get "firewall.${zone}.log_limit" 2>/dev/null )
+	# Empty zone / unset log bit are valid; set -e cannot apply.
+	log_val=$(wan_zone_log_value "$zone") || log_val=
+	# Unset log_limit is a valid empty value; uci -q get exits 1.
+	limit_val=
+	if [ -n "$zone" ]; then
+		limit_val=$(uci -q get "firewall.${zone}.log_limit" 2>/dev/null || true)
+	fi
 	wan_log=false
 	if wan_filter_log_enabled "$log_val"; then
 		wan_log=true
@@ -441,12 +518,14 @@ build_logging_status_json() {
 	if [ -n "$zone" ] && [ "$wan_log" = true ] && [ "$nf4" = true ] && [ "$nf6" = true ]; then
 		ready=true
 	fi
+	weak_device=false
+	[ "$(weak_device_detected)" = true ] && weak_device=true
 
 	zone_json=$(json_null_or_string "$zone")
 	limit_json=$(json_null_or_string "$limit_val")
 
-	printf '{"wan_zone":%s,"wan_log":%s,"wan_log_limit":%s,"nf_log_ipv4":%s,"nf_log_ipv6":%s,"ready":%s,"blockers":%s,"warnings":%s}' \
-		"$zone_json" "$wan_log" "$limit_json" "$nf4" "$nf6" "$ready" "$blockers" "$warnings"
+	printf '{"wan_zone":%s,"wan_log":%s,"wan_log_limit":%s,"nf_log_ipv4":%s,"nf_log_ipv6":%s,"ready":%s,"weak_device":%s,"blockers":%s,"warnings":%s}' \
+		"$zone_json" "$wan_log" "$limit_json" "$nf4" "$nf6" "$ready" "$weak_device" "$blockers" "$warnings"
 }
 
 reload_firewall() {
