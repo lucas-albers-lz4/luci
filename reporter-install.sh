@@ -7,7 +7,6 @@ set -e
 bin=/usr/bin/luci-bwc
 backup=/root/luci-9287-backup
 tmp=/tmp/luci-bwc-9287
-# Filled after the binary is published. Do not run with this placeholder.
 url='https://raw.githubusercontent.com/lucas-albers-lz4/luci/8f1a2159048a569733d8716f23f52472bcfdb340/luci-bwc'
 sha='47c70244a83f8fe7c536014a141f0a5c1c84ab095f282a8d5a0bc009a3fb3056'
 
@@ -74,4 +73,4 @@ fi
 
 echo "Installed patched luci-bwc. Backup: $backup/luci-bwc"
 echo "Open Status → Realtime Graphs, wait a few seconds, then: ls /var/lib/luci-bwc/radio/"
-echo "Restore: sh /root/luci-9287-restore.sh   (or cp $backup/luci-bwc $bin)"
+echo "Restore: cp $backup/luci-bwc $bin && chmod 755 $bin"
